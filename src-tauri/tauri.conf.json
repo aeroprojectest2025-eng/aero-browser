@@ -13,10 +13,12 @@
     "windows": [
       {
         "title": "browser",
-        "width": 800,
+        "width": 900,
         "height": 600,
         "decorations": false,
-        "transparent": false
+        "transparent": false,
+        "resizable": true,
+        "fullscreen": false
       }
     ],
     "security": {
