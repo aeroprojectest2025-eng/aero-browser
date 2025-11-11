@@ -1,9 +1,9 @@
+/* === Main Titlebar Container === */
 .titlebar {
-  height: 35px;
+  height: 40px;
   background: #ffffff;
   color: #000000;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   user-select: none;
   position: fixed;
@@ -12,199 +12,181 @@
   right: 0;
   z-index: 1000;
   border-bottom: 1px solid #e0e0e0;
+  padding: 0 8px;
+  gap: 12px; /* Defines space between the center, settings, and controls */
 }
 
-/* Make the titlebar a draggable region for desktop (Tauri/Electron style) */
-.titlebar {
-  -webkit-app-region: drag;
-}
-
-.titlebar-drag {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
+/* === Center Section (Grows and Shrinks) === */
+.titlebar-center {
+  flex-grow: 1; /* This is the key: it takes all available free space */
   display: flex;
   align-items: center;
-  justify-content: center;
-  /* keep pointer-events none so underlying controls remain clickable when needed */
-  pointer-events: none;
+  gap: 12px;
+  min-width: 0; /* CRITICAL: Allows this container to shrink below its content size */
 }
 
+/* === Left-Side Nav Buttons === */
 .titlebar-left {
-  position: absolute;
-  left: 8px;
   display: flex;
   gap: 4px;
-  pointer-events: auto;
+  flex-shrink: 0; /* Prevents nav buttons from being crushed */
 }
 
-/* Interactive elements inside the draggable region must be explicitly marked non-draggable
-   so clicks and inputs work correctly. */
-.titlebar-left,
-.nav-button,
-.search-container,
-.search-input,
-.titlebar-controls,
-.titlebar-button {
-  -webkit-app-region: no-drag;
+/* === Right-Side Sections (Fixed Size) === */
+.titlebar-right,
+.titlebar-controls {
+  flex-shrink: 0; /* Prevents settings and window controls from being crushed */
 }
 
-.nav-button {
-  width: 26px;
-  height: 26px;
-  border: none;
-  background: rgba(0, 0, 0, 0.03);
-  color: #333333;
-  cursor: pointer;
+.titlebar-right {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  transition: all 0.2s ease;
-  border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-.nav-button:hover {
-  background: rgba(0, 0, 0, 0.08);
-  border-color: rgba(0, 0, 0, 0.15);
-  transform: translateY(-1px);
+.titlebar-controls {
+  display: flex;
 }
 
-.nav-button:active {
-  background: rgba(0, 0, 0, 0.12);
-  transform: translateY(0);
-}
-
-.nav-button svg {
-  opacity: 0.7;
-  width: 14px;
-  height: 14px;
-}
-
-.nav-button:hover svg {
-  opacity: 1;
+/* === Search Bar Styling === */
+.search-wrapper {
+  position: relative;
+  width: 100%;
+  flex-grow: 1; /* Allows the wrapper to fill the .titlebar-center space */
+  /* --- CHANGE: Set the maximum width to 700px --- */
+  max-width: 500px; 
+  /* We add margin: auto to center it when space is available */
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .search-container {
-  width: 500px;
-  height: 24px;
-  background: #f5f5f5;
-  border: 1px solid #d0d0d0;
-  border-radius: 6px;
+  width: 100%;
+  height: 28px;
+  background: #f1f3f4;
+  border: 1px solid transparent;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   padding: 0 10px;
   gap: 8px;
   transition: all 0.2s ease;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
-  pointer-events: auto;
-}
-
-.search-container:hover {
-  border-color: #b0b0b0;
-  background: #f0f0f0;
-}
-
-.search-container:focus-within {
-  border-color: #4a9eff;
-  background: #ffffff;
-  box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.15), inset 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-.search-icon {
-  color: #666666;
-  flex-shrink: 0;
-  transition: color 0.2s ease;
-  width: 13px;
-  height: 13px;
-}
-
-.search-container:focus-within .search-icon {
-  color: #4a9eff;
 }
 
 .search-input {
-  flex: 1;
+  flex-grow: 1;
   background: transparent;
   border: none;
-  color: #000000;
-  font-size: 12px;
+  color: #202124;
+  font-size: 13px;
   outline: none;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  letter-spacing: 0.3px;
+  min-width: 150px; /* A minimum for the input field itself */
 }
 
-.search-input::placeholder {
-  color: #999999;
-  font-weight: 400;
-}
-
-.search-input::selection {
-  background: rgba(74, 158, 255, 0.3);
-}
-
-.titlebar-controls {
-  position: absolute;
-  right: 0;
-  display: flex;
-  height: 100%;
-  gap: 1px;
-  pointer-events: auto;
-}
-
-.titlebar-button {
-  width: 38px;
-  height: 100%;
+/* === Generic Button Styling === */
+.nav-button,
+.settings-button {
+  width: 28px;
+  height: 28px;
   border: none;
   background: transparent;
-  color: #333333;
+  color: #555555;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.15s ease;
-  position: relative;
+  border-radius: 50%;
+  transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-.titlebar-button::before {
-  content: '';
-  position: absolute;
-  inset: 5px;
-  border-radius: 3px;
+.nav-button:hover,
+.settings-button:hover {
+  background-color: #f0f0f0;
+}
+
+.nav-button:active,
+.settings-button:active {
+  background-color: #e0e0e0;
+  transform: scale(0.95);
+}
+
+.titlebar-button {
+  width: 40px;
+  height: 100%;
+  border: none;
   background: transparent;
-  transition: background 0.15s ease;
+  color: #5f6368;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+  border-radius: 4px;
+}
+.titlebar-button-icon {
+  width: 16px;
+  height: 16px;
 }
 
-.titlebar-button:hover::before {
-  background: rgba(0, 0, 0, 0.08);
+.titlebar-button:hover {
+  background-color: #f0f0f0;
 }
 
-.titlebar-button.close:hover::before {
-  background: #e81123;
-}
-
-.titlebar-button.close:hover {
+/* .titlebar-button.close:hover {
+  background-color: #e81123;
   color: #ffffff;
+} */
+
+/* === Other Visuals (Icons, Progress Bar) === */
+.search-icon {
+  color: #5f6368;
+  flex-shrink: 0;
 }
 
-.titlebar-button:active::before {
-  background: rgba(0, 0, 0, 0.12);
+.search-container:hover {
+  background: #e8eaed;
 }
 
-.titlebar-button.close:active::before {
-  background: #c70011;
+.search-container:focus-within {
+  background: #ffffff;
+  border-color: #1a73e8;
+  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
 }
 
-.titlebar-button svg {
-  position: relative;
-  z-index: 1;
-  opacity: 0.7;
-  width: 10px;
-  height: 10px;
+.search-progress-bar {
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #1a73e8;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+  border-radius: 1px;
 }
 
-.titlebar-button:hover svg {
+.search-progress-bar.active {
+  transform: scaleX(1);
   opacity: 1;
+  transition: transform 2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* === RESPONSIVE FIX FOR SMALL WINDOWS === */
+@media (max-width: 650px) {
+  .titlebar {
+    gap: 8px; /* Reduce main gap */
+  }
+
+  .titlebar-center {
+    gap: 8px; /* Reduce inner gap */
+  }
+
+  .search-wrapper {
+    min-width: 100px; /* Allow search bar to get much smaller */
+  }
+  
+  .search-input {
+    min-width: 50px; /* Allow text input to get smaller */
+  }
 }
